@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Civic Issue Reporting System</h1>
+    <h2>Admin Dashboard</h2>
+
+    <p>View and manage all submitted complaints.</p>
+
+    {% if complaints %}
+
+        {% for complaint in complaints %}
+
+            <hr>
+
+            <h3>Complaint ID: {{ complaint.id }}</h3>
+
+            <p>
+                <b>Name:</b> {{ complaint.name }}
+            </p>
+
+            <p>
+                <b>Description:</b>
+                {{ complaint.description }}
+            </p>
+
+            <p>
+                <b>Location:</b> {{ complaint.location }}
+            </p>
+
+            <p>
+                <b>Category:</b>
+                {{ complaint.category or "Not classified yet" }}
+            </p>
+
+            <p>
+                <b>Department:</b>
+                {{ complaint.department or "Not assigned yet" }}
+            </p>
+
+            {% if complaint.image_filename %}
+                <p><b>Uploaded Photo:</b></p>
+
+                <img
+                    src="{{ url_for('uploaded_file', filename=complaint.image_filename) }}"
+                    width="250"
+                    alt="Complaint photo">
+            {% endif %}
+
+            <p>
+                <b>Current Status:</b>
+                {{ complaint.status }}
+            </p>
+
+            <form method="POST"
+                  action="{{ url_for('update_status', complaint_id=complaint.id) }}">
+
+                <label>Update Status:</label>
+
+                <select name="status">
+                    <option value="Pending"
+                        {% if complaint.status == "Pending" %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="In Progress"
+                        {% if complaint.status == "In Progress" %}selected{% endif %}>
+                        In Progress
+                    </option>
+
+                    <option value="Resolved"
+                        {% if complaint.status == "Resolved" %}selected{% endif %}>
+                        Resolved
+                    </option>
+                </select>
+
+                <button type="submit">Update</button>
+
+            </form>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No complaints submitted yet.</p>
+
+    {% endif %}
+
+    <hr>
+
+    <a href="/">Back to Complaint Form</a>
+
+</body>
+</html>

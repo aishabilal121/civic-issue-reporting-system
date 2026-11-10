@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+civic_issues.db
+uploads/*
+.DS_Store

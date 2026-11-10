@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Civic Issue Reporting System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #23476a;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px;
+            background: #23476a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #183653;
+        }
+
+        .submit-button {
+            width: 100%;
+        }
+
+        .success {
+            background: #e6f7e9;
+            color: green;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .location-status {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .track-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        a {
+            color: #23476a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Civic Issue Reporting System</h1>
+
+    <p style="text-align:center;">
+        Report public issues in your area and help improve your city.
+    </p>
+
+    {% if complaint_id %}
+        <div class="success">
+            <h3>Complaint Submitted Successfully!</h3>
+            <p>Your Complaint ID is:</p>
+            <h2>{{ complaint_id }}</h2>
+            <p>Please save this ID to track your complaint.</p>
+        </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Your Name:</label>
+        <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            required
+        >
+
+        <label>Describe the Problem:</label>
+        <textarea
+            name="description"
+            rows="4"
+            placeholder="Example: There is a large pothole on the road"
+            required
+        ></textarea>
+
+        <label>Location:</label>
+        <input
+            type="text"
+            id="location"
+            name="location"
+            placeholder="Enter your location or use the button below"
+            required
+        >
+
+        <button type="button" onclick="getLocation()">
+            Use My Current Location
+        </button>
+
+        <p id="location-status" class="location-status"></p>
+
+        <label>Upload Photo (JPG, JPEG or PNG):</label>
+        <input
+            type="file"
+            name="image"
+            accept=".jpg,.jpeg,.png"
+        >
+
+        <button type="submit" class="submit-button">
+            Submit Complaint
+        </button>
+
+    </form>
+
+    <div class="track-link">
+        <p>Already submitted a complaint?</p>
+        <a href="/track">Track Your Complaint</a>
+    </div>
+
+</div>
+
+<script>
+    function getLocation() {
+
+        const status = document.getElementById("location-status");
+        const locationInput = document.getElementById("location");
+
+        if (navigator.geolocation) {
+
+            status.innerHTML = "Detecting your location...";
+
+            navigator.geolocation.getCurrentPosition(
+
+                function(position) {
+
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    locationInput.value = latitude + ", " + longitude;
+
+                    status.innerHTML =
+                        "Location detected successfully!";
+
+                },
+
+                function(error) {
+
+                    status.innerHTML =
+                        "Unable to detect location. Please enter it manually.";
+
+                }
+
+            );
+
+        } else {
+
+            status.innerHTML =
+                "Geolocation is not supported by your browser.";
+
+        }
+    }
+</script>
+
+</body>
+</html>
